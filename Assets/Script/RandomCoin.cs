@@ -10,6 +10,7 @@ public class RandomCoin : MonoBehaviour
     public GameObject[] areas;//areaの配列
     public GameObject[] specificAreas;//橋のエリア
     public bool specificAreaGenerated = false; // specificAreasへの生成フラグ
+    public LayerMask avoidanceLayerMask; // 衝突判定用のレイヤーマスク
 
     // Start is called before the first frame update
     void Start()
@@ -73,11 +74,25 @@ public class RandomCoin : MonoBehaviour
         Vector3 minBounds = areaCollider.bounds.min;
         Vector3 maxBounds = areaCollider.bounds.max;
 
-        float randomX = Random.Range(minBounds.x, maxBounds.x);
-        float randomY = 4;
-        float randomZ = Random.Range(minBounds.z, maxBounds.z);
+        int maxAttempts = 100; // 最大試行回数
+        int attempts = 0;
 
-        return new Vector3(randomX, randomY, randomZ);
+        while (attempts < maxAttempts)
+        {
+            float randomX = Random.Range(minBounds.x, maxBounds.x);
+            float randomY = 4;
+            float randomZ = Random.Range(minBounds.z, maxBounds.z);
+
+            Vector3 randomPosition = new Vector3(randomX, randomY, randomZ);
+            if (!Physics.CheckSphere(randomPosition, 1f, avoidanceLayerMask))//衝突判定
+            {
+                return randomPosition; // 衝突しない位置を返す
+            }
+            attempts++;
+        }
+
+        Debug.LogWarning("オブジェクトを避けるための適切な位置が見つかりませんでした。");
+        return new Vector3(Random.Range(minBounds.x, maxBounds.x), 4, Random.Range(minBounds.z, maxBounds.z)); // 最大試行回数を超えた場合は、ランダムな位置を返す
     }
 }
 

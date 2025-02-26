@@ -9,13 +9,15 @@ public class RandomCoin : MonoBehaviour
     private int numberObjects = 8;//生成する個数エリア
     public GameObject[] areas;//areaの配列
     public GameObject[] specificAreas;//橋のエリア
-    bool specificAreaGenerated = false; // specificAreasへの生成フラグ
+    public bool specificAreaGenerated = false; // specificAreasへの生成フラグ
 
     // Start is called before the first frame update
     void Start()
     {
         areas = GameObject.FindGameObjectsWithTag("Area");
+        specificAreaGenerated = false;
         PlaceObjects();
+        
     }
 
     // Update is called once per frame
@@ -25,6 +27,14 @@ public class RandomCoin : MonoBehaviour
     }
     public void PlaceObjects()
     {
+        Debug.Log("PlaceObjects() called.");
+        // すべてのコインを削除
+        GameObject[] existingCoins = GameObject.FindGameObjectsWithTag("Coin");
+        foreach (GameObject existingCoin in existingCoins)
+        {
+            Destroy(existingCoin);
+            Debug.Log("Destroyed coin: " + existingCoin.name);
+        }
         int objectsPlaced = 0;
 
         // 特定のエリアにコインを1つ生成
@@ -36,7 +46,7 @@ public class RandomCoin : MonoBehaviour
             Instantiate(coin, randomPosition, Quaternion.identity);
             objectsPlaced++;
             specificAreaGenerated = true; // specificAreasへの生成フラグを立てる
-
+            Debug.Log("Generated coin in specific area.");
 
         }
 
@@ -50,7 +60,10 @@ public class RandomCoin : MonoBehaviour
             Instantiate(coin, randomPosition, Quaternion.identity);
 
             objectsPlaced++;
+
+            Debug.Log("Generated coin in other area.");
         }
+        Debug.Log("PlaceObjects() finished.");
     }
 
     Vector3 GetRandomPositionInArea(GameObject area)

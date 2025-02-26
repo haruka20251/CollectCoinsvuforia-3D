@@ -18,6 +18,7 @@ TagManager:
   - cloud2
   - Area
   - Area2
+  - Coin
   layers:
   - Default
   - TransparentFX

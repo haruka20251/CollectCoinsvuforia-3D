@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class RandomCoin : MonoBehaviour
 {
     public GameObject coin;
-    private int numberObjects = 7;//生成する個数
-    private GameObject[] areas;//areaの配列
+    private int numberObjects = 8;//生成する個数エリア
+    public GameObject[] areas;//areaの配列
+    public GameObject[] specificAreas;//橋のエリア
+    bool specificAreaGenerated = false; // specificAreasへの生成フラグ
 
     // Start is called before the first frame update
     void Start()
@@ -20,25 +23,31 @@ public class RandomCoin : MonoBehaviour
     {
         
     }
-    void PlaceObjects()
+    public void PlaceObjects()
     {
-        // 配置するオブジェクトの数をカウント
         int objectsPlaced = 0;
 
+        // 特定のエリアにコインを1つ生成
+        if (specificAreas.Length > 0 && !specificAreaGenerated) // specificAreasが存在し、まだ生成されていない場合
+        {
+            int randomIndex = Random.Range(0, specificAreas.Length);
+            GameObject selectedArea = specificAreas[randomIndex];
+            Vector3 randomPosition = GetRandomPositionInArea(selectedArea);
+            Instantiate(coin, randomPosition, Quaternion.identity);
+            objectsPlaced++;
+            specificAreaGenerated = true; // specificAreasへの生成フラグを立てる
+
+
+        }
+
+
+        // その他のエリアにコインを生成 (numberObjects - 1) 個
         while (objectsPlaced < numberObjects)
         {
-            // ランダムなエリアを選択
             int randomAreaIndex = Random.Range(0, areas.Length);
             GameObject selectedArea = areas[randomAreaIndex];
-
-            // エリア内にランダムな位置を生成
             Vector3 randomPosition = GetRandomPositionInArea(selectedArea);
-
-            // オブジェクトを生成
-            GameObject newObject = Instantiate(coin, randomPosition, Quaternion.identity);
-
-            // オブジェクトが他のオブジェクトと重ならないように調整
-            
+            Instantiate(coin, randomPosition, Quaternion.identity);
 
             objectsPlaced++;
         }

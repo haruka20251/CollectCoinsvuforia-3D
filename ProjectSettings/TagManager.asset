@@ -16,6 +16,8 @@ TagManager:
   - plane1
   - cloud1
   - cloud2
+  - Area
+  - Area2
   layers:
   - Default
   - TransparentFX

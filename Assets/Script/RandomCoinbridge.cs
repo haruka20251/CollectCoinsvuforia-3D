@@ -2,23 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class RandomCoin : MonoBehaviour
+public class RandomCoinbridge : MonoBehaviour
 {
     public GameObject coin;
-    private int numberObjects = 7;//生成する個数
+    private int numberObjects = 1;//生成する個数
     private GameObject[] areas;//areaの配列
 
     // Start is called before the first frame update
     void Start()
     {
-        areas = GameObject.FindGameObjectsWithTag("Area");
+        areas = GameObject.FindGameObjectsWithTag("Area2");
         PlaceObjects();
     }
 
     // Update is called once per frame
     void Update()
     {
-        
+
     }
     void PlaceObjects()
     {
@@ -38,7 +38,7 @@ public class RandomCoin : MonoBehaviour
             GameObject newObject = Instantiate(coin, randomPosition, Quaternion.identity);
 
             // オブジェクトが他のオブジェクトと重ならないように調整
-            
+
 
             objectsPlaced++;
         }
@@ -58,4 +58,3 @@ public class RandomCoin : MonoBehaviour
         return new Vector3(randomX, randomY, randomZ);
     }
 }
-

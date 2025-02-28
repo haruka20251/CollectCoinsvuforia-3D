@@ -7,9 +7,14 @@ public class TouchOperation : MonoBehaviour
     public GameObject generateScript; // RandomCoinスクリプトがアタッチされたGameObject
     private int initialCoinCount; // 最初に生成されたコインの数
     private int coinLayerMask;// Coinレイヤーマスク
+    private GameManager gameManager;
+    private GameObject coin;
+    private AudioSource coinSound;
 
     void Start()
     {
+        gameManager =GameObject.Find("GameManager"). GetComponent<GameManager>();
+        
         // コインを生成
         GenerateCoins();
 
@@ -20,32 +25,40 @@ public class TouchOperation : MonoBehaviour
 
     void Update()
     {
-        if (Input.touchCount > 0)
+        if (!gameManager.timeStop)
         {
-            Debug.Log("Touch detected."); // 追加
-
-            Touch touch = Input.GetTouch(0);
-            Ray ray = Camera.main.ScreenPointToRay(touch.position);
-            RaycastHit hit;
-
-            // Raycastにレイヤーマスクを適用
-            if (Physics.Raycast(ray, out hit, Mathf.Infinity, coinLayerMask))
+            if (Input.touchCount > 0)
             {
-                Debug.Log("Raycast hit: " + hit.collider.gameObject.name); // 追加
-                if (hit.collider.gameObject.tag == "Coin")
+                Debug.Log("Touch detected."); // 追加
+
+                Touch touch = Input.GetTouch(0);
+                Ray ray = Camera.main.ScreenPointToRay(touch.position);
+                RaycastHit hit;
+
+                // Raycastにレイヤーマスクを適用
+                if (Physics.Raycast(ray, out hit, Mathf.Infinity, coinLayerMask))
                 {
-                    Debug.Log("Coin tag detected."); // 追加
-                    Destroy(hit.collider.gameObject);
-                    StartCoroutine(RegenerateAfterDelay());
-                }
-                IEnumerator RegenerateAfterDelay()
-                {
-                    yield return null; // 1フレーム待機
-                    // コインがすべて消えたら再生成
-                    if (GameObject.FindGameObjectsWithTag("Coin").Length == 0)
+                    Debug.Log("Raycast hit: " + hit.collider.gameObject.name); // 追加
+                    if (hit.collider.gameObject.tag == "Coin")
                     {
-                        Debug.Log("No coins left."); // 追加
-                        GenerateCoins();
+                        Debug.Log("Coin tag detected."); // 追加
+
+                        gameManager.score++;
+                        coin = hit.collider.gameObject;
+                        coinSound = coin.GetComponent<AudioSource>();
+                        coinSound.Play();
+                        Destroy(hit.collider.gameObject);
+                        StartCoroutine(RegenerateAfterDelay());
+                    }
+                    IEnumerator RegenerateAfterDelay()
+                    {
+                        yield return null; // 1フレーム待機
+                                           // コインがすべて消えたら再生成
+                        if (GameObject.FindGameObjectsWithTag("Coin").Length == 0)
+                        {
+                            Debug.Log("No coins left."); // 追加
+                            GenerateCoins();
+                        }
                     }
                 }
             }

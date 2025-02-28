@@ -84,7 +84,7 @@ public class RandomCoin : MonoBehaviour
             float randomZ = Random.Range(minBounds.z, maxBounds.z);
 
             Vector3 randomPosition = new Vector3(randomX, randomY, randomZ);
-            if (!Physics.CheckSphere(randomPosition, 1f, avoidanceLayerMask))//Õ“Ë”»’è
+            if (!Physics.CheckSphere(randomPosition, 2f, avoidanceLayerMask))//Õ“Ë”»’è
             {
                 return randomPosition; // Õ“Ë‚µ‚È‚¢ˆÊ’u‚ğ•Ô‚·
             }

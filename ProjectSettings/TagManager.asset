@@ -19,6 +19,7 @@ TagManager:
   - Area
   - Area2
   - Coin
+  - Wall
   layers:
   - Default
   - TransparentFX
@@ -26,7 +27,7 @@ TagManager:
   - Coin
   - Water
   - UI
-  - 
+  - Object
   - 
   - 
   - 
